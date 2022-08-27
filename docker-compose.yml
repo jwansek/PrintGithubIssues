@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+    printer:
+        container_name: githubprinter
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: jwansek/githubprinter
+        volumes:
+            - ./github_printer.log:/githubPrinter/github_printer.log
+        env_file:
+            - githubPrinter.env

@@ -1,0 +1,5 @@
+# sudo apt-get install wkhtmltopdf
+pdfkit
+requests
+jinja
+pycups

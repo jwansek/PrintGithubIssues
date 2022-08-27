@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+    <body>
+        <header>
+            <h1>{{ "%s #%d" % (title, number) }}</h1>
+            <table>
+                <tr>
+                    <th>URL:</th>
+                    <th><a href="{{ html_url }}">{{ html_url }}<a></th>
+                </tr>
+                <tr>
+                    <th>Created:</th>
+                    <th>{{ created_at }}</th>
+                </tr>
+                <tr>
+                    <th>Created by:</th>
+                    <th><a href="https://github.com/{{ user['login'] }}">{{ user["login"] }}</a></th>
+                </tr>
+            </table>
+            <hr />
+        </header>
+        {{ gfm_html|safe }}
+    </body>
+</html>
