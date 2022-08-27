@@ -9,5 +9,6 @@ services:
         image: jwansek/githubprinter
         volumes:
             - ./github_printer.log:/githubPrinter/github_printer.log
+            - ./.last_checked_at:/githubPrinter/.last_checked_at
         env_file:
-            - githubPrinter.env
+            - ./githubPrinter.env

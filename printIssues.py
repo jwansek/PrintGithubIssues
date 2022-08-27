@@ -52,6 +52,8 @@ if not os.path.exists("/.dockerenv") and os.path.exists("githubPrinter.env"):
     from dotenv import load_dotenv
     load_dotenv("githubPrinter.env")
     logging.info("Not being run in docker. Adding environment variables...")
+else:
+    logging.info("Detected as being inside a docker container...")
 
 cups.setUser(os.environ["CUPS_USER"])
 cups.setPasswordCB(lambda a: os.environ["CUPS_PASSWD"])
@@ -141,11 +143,14 @@ def print_file(file_path: str, actually_print: bool = True):
     logging.info("The printer queue is now %s" % json.dumps(conn.getJobs(), indent = 4))
 
 def main():
-    if not os.path.exists(".last_checked_at"):
+    try:
+        if not os.path.exists(".last_checked_at"):
+            since = datetime.datetime(1970, 1, 1)
+        else:
+            with open(".last_checked_at", "rb") as f:
+                since = pickle.load(f)
+    except:
         since = datetime.datetime(1970, 1, 1)
-    else:
-        with open(".last_checked_at", "rb") as f:
-            since = pickle.load(f)
 
     logging.info("Last checked at %s" % since.replace(microsecond=0).isoformat())
     the_next_since = datetime.datetime.now()
@@ -162,7 +167,7 @@ def main():
         logging.info("Going to try and render and print issue '%s #%d' in repo '%s'..." % (issue["title"], issue["number"], issue["html_url"]))
 
         with RenderedIssue(os.environ["GITHUB_TOKEN"], issue) as rendered_pdf:
-            print_file(rendered_pdf, False)
+            print_file(rendered_pdf)
 
     with open(".last_checked_at", "wb") as f:
         pickle.dump(the_next_since, f)
